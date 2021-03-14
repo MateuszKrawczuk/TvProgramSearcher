@@ -8,11 +8,12 @@ data class Show(
     @SerialName("genres")
     val genres: List<String>,
     val id: Long,
-    val image: ByteArray?,
-    val language: String,
+    val image: TvImage? ,
     val name: String,
-    val officialSite: String,
-    val premiered: String,
-    val summary: String,
-//    val url: String,
+)
+
+@Serializable
+data class TvImage(
+    val medium: String,
+    val original: String
 )

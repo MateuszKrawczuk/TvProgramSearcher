@@ -1,24 +1,17 @@
 
 CREATE TABLE Show(
 id INTEGER NOT NULL PRIMARY KEY,
-image BLOB,
-language TEXT NOT NULL,
+image TEXT NOT NULL,
 name TEXT NOT NULL,
-officialSite TEXT NOT NULL,
-premiered TEXT NOT NULL,
-genres TEXT NOT NULL,
-summary TEXT NOT NULL
+genres TEXT NOT NULL
 );
 
 insertItem:
 INSERT OR REPLACE INTO Show(id,
                             image,
-                            language,
                             name,
-                            officialSite,
-                            premiered,
-                            genres,
-                            summary)VALUES(?,?,?,?,?,?,?,?);
+                            genres
+                            )VALUES(?,?,?,?);
 
 
 selectAll:

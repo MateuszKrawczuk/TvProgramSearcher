@@ -2,6 +2,7 @@ package com.mateuszkrawczuk.tvprogramsearcher.common.repository
 
 import co.touchlab.kermit.Kermit
 import com.mateuszkrawczuk.TvProgramSearcher.common.remote.Show
+import com.mateuszkrawczuk.TvProgramSearcher.common.remote.TvImage
 import com.mateuszkrawczuk.tvprogramsearcher.common.model.personBios
 import com.mateuszkrawczuk.tvprogramsearcher.common.model.personImages
 import com.mateuszkrawczuk.tvprogramsearcher.common.remote.TvMazeApi
@@ -36,22 +37,14 @@ class TvProgramSearcherRepository : KoinComponent  {
         return tvProgramSearcherQueries?.selectAll(mapper = {
                                                              id,
                                                              image,
-                                                             language,
                                                              name,
-                                                             officialSite,
-                                                             premiered,
                                                              genres,
-                                                             summary
                                                               ->
             Show(
                 genres = listOf(genres),
                 id = id,
-                image = image,
-                language = language,
+                image = TvImage(image,""),
                 name = name,
-                officialSite = officialSite,
-                premiered = premiered,
-                summary = summary,
             )
         })?.asFlow()?.mapToList() ?: flowOf(emptyList<Show>())
     }
@@ -66,13 +59,9 @@ class TvProgramSearcherRepository : KoinComponent  {
         result.forEach {
             tvProgramSearcherQueries?.insertItem(
                 it.show.id,
-                it.show.image,
-                it.show.language,
+                it.show.image?.medium ?: "",
                 it.show.name,
-                it.show.officialSite,
-                it.show.premiered,
                 it.show.genres.joinToString(),
-                it.show.summary
                 )
         }
     }
