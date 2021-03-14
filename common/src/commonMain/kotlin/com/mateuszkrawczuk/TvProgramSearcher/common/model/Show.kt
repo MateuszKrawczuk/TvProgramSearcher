@@ -1,4 +1,4 @@
-package com.mateuszkrawczuk.TvProgramSearcher.common.remote
+package com.mateuszkrawczuk.TvProgramSearcher.common.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -8,7 +8,7 @@ data class Show(
     @SerialName("genres")
     val genres: List<String>,
     val id: Long,
-    val image: TvImage? ,
+    val image: TvImage?,
     val name: String,
 )
 

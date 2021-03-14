@@ -1,5 +1,6 @@
 package com.mateuszkrawczuk.TvProgramSearcher.common.remote
 
+import com.mateuszkrawczuk.TvProgramSearcher.common.model.Show
 import kotlinx.serialization.Serializable
 
 @Serializable

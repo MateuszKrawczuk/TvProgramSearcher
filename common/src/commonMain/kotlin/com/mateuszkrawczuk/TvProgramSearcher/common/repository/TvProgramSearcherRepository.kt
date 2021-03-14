@@ -1,18 +1,18 @@
 package com.mateuszkrawczuk.tvprogramsearcher.common.repository
 
 import co.touchlab.kermit.Kermit
-import com.mateuszkrawczuk.TvProgramSearcher.common.remote.Show
-import com.mateuszkrawczuk.TvProgramSearcher.common.remote.TvImage
-import com.mateuszkrawczuk.tvprogramsearcher.common.model.personBios
-import com.mateuszkrawczuk.tvprogramsearcher.common.model.personImages
+import com.mateuszkrawczuk.TvProgramSearcher.common.model.Show
+import com.mateuszkrawczuk.TvProgramSearcher.common.model.TvImage
 import com.mateuszkrawczuk.tvprogramsearcher.common.remote.TvMazeApi
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import kotlin.coroutines.CoroutineContext
 
 
 class TvProgramSearcherRepository : KoinComponent  {
@@ -23,15 +23,13 @@ class TvProgramSearcherRepository : KoinComponent  {
     private val tvProgramSearcherDatabase = createDb()
     private val tvProgramSearcherQueries = tvProgramSearcherDatabase?.tvProgramSearcherQueries
 
-    var peopleJob: Job? = null
-
     init {
         coroutineScope.launch {
             fetchAndStoreShows("")
         }
     }
 
-    fun fetchPeopleAsFlow(): Flow<List<Show>> {
+    fun fetchShowsAsFlow(): Flow<List<Show>> {
         // the main reason we need to do this check is that sqldelight isn't currently
         // setup for javascript client
         return tvProgramSearcherQueries?.selectAll(mapper = {
@@ -49,7 +47,13 @@ class TvProgramSearcherRepository : KoinComponent  {
         })?.asFlow()?.mapToList() ?: flowOf(emptyList<Show>())
     }
 
-    suspend fun fetchAndStoreShows(string: String)  {
+    fun updateSearchList(query: String) {
+        coroutineScope.launch {
+            fetchAndStoreShows(query)
+        }
+    }
+
+    private suspend fun fetchAndStoreShows(string: String)  {
         logger.d { "fetchAndStoreShows" }
         val result = tvMazeApi.fetchShows(string)
 
@@ -65,54 +69,6 @@ class TvProgramSearcherRepository : KoinComponent  {
                 )
         }
     }
-
-    // Used by web client atm
-    suspend fun fetchPeople(string: String) = tvMazeApi.fetchShows(string)
-
-    fun getPersonBio(personName: String): String {
-        return personBios[personName] ?: ""
-    }
-
-    fun getshowImage(personName: String): String {
-        return personImages[personName] ?: ""
-    }
-
-    // called from Kotlin/Native clients
-    fun startObservingPeopleUpdates(success: (List<Show>) -> Unit) {
-        logger.d { "startObservingTvUpdates" }
-        peopleJob = coroutineScope.launch {
-            fetchPeopleAsFlow().collect {
-                success(it)
-            }
-        }
-    }
-
-    fun stopObservingPeopleUpdates() {
-        logger.d { "stopObservingPeopleUpdates, peopleJob = $peopleJob" }
-        peopleJob?.cancel()
-    }
-
-    val iosScope: CoroutineScope = object : CoroutineScope {
-        override val coroutineContext: CoroutineContext
-            get() = SupervisorJob() + Dispatchers.Main
-    }
-
-    companion object {
-        private const val POLL_INTERVAL = 10000L
-    }
 }
 
-
-class KotlinNativeFlowWrapper<T>(private val flow: Flow<T>) {
-    fun subscribe(
-        scope: CoroutineScope,
-        onEach: (item: T) -> Unit,
-        onComplete: () -> Unit,
-        onThrow: (error: Throwable) -> Unit
-    ) = flow
-        .onEach { onEach(it) }
-        .catch { onThrow(it) }
-        .onCompletion { onComplete() }
-        .launchIn(scope)
-}
 

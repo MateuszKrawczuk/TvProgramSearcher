@@ -1,18 +1,18 @@
-package com.surrus.peopleinspace
+package com.mateuszkrawczuk.tvprogramsearcher
 
-import com.surrus.common.di.initKoin
-import com.surrus.common.remote.TvMazeApi
+import com.mateuszkrawczuk.tvprogramsearcher.common.di.initKoin
+import com.mateuszkrawczuk.tvprogramsearcher.common.remote.TvMazeApi
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-class PeopleInSpaceTest {
+class TvMazeTest {
     @Test
-    fun testGetPeople() = runBlocking {
+    fun testGetShows() = runBlocking {
         val koin = initKoin(enableNetworkLogs = true).koin
-        val peopleInSpaceApi = koin.get<TvMazeApi>()
-        val result = peopleInSpaceApi.fetchPeople()
+        val tvMazeApi = koin.get<TvMazeApi>()
+        val result = tvMazeApi.fetchShows("Legend")
         println(result)
-        assertTrue(result.people.isNotEmpty())
+        assertTrue(result.isNotEmpty())
     }
 }

@@ -57,9 +57,9 @@ fun MainLayout() {
                     }
                 )
             }
-            composable(Screen.ShowDetails.title + "/{person}") { backStackEntry ->
+            composable(Screen.ShowDetails.title + "/{show}") { backStackEntry ->
                 ShowDetailsScreen(
-                    backStackEntry.arguments?.get("person") as String,
+                    backStackEntry.arguments?.get("show") as String,
                     popBack = { navController.popBackStack() })
             }
         }

@@ -22,7 +22,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mateuszkrawczuk.TvProgramSearcher.common.remote.Show
+import com.mateuszkrawczuk.TvProgramSearcher.common.model.Show
 import dev.chrisbanes.accompanist.coil.CoilImage
 import org.koin.androidx.compose.getViewModel
 
@@ -76,8 +76,8 @@ fun ShowListScreen(showSelected : (show : Show) -> Unit) {
         Column {
             LazyColumn {
                 items(showState.value) { show ->
-                    val personImageUrl = show.image?.medium ?: ""
-                    PersonView(personImageUrl, show, showSelected)
+                    val showImageUrl = show.image?.medium ?: ""
+                    showView(showImageUrl, show, showSelected)
                 }
             }
         }
@@ -86,7 +86,7 @@ fun ShowListScreen(showSelected : (show : Show) -> Unit) {
 
 
 @Composable
-fun PersonView(personImageUrl: String, show: Show, showSelected : (show : Show) -> Unit) {
+fun showView(showImageUrl: String, show: Show, showSelected : (show : Show) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -94,8 +94,8 @@ fun PersonView(personImageUrl: String, show: Show, showSelected : (show : Show) 
             .padding(16.dp), verticalAlignment = Alignment.CenterVertically
     ) {
 
-        if (personImageUrl.isNotEmpty()) {
-            CoilImage(data = personImageUrl, modifier = Modifier.size(60.dp), contentDescription = show.name)
+        if (showImageUrl.isNotEmpty()) {
+            CoilImage(data = showImageUrl, modifier = Modifier.size(60.dp), contentDescription = show.name)
         } else {
             Spacer(modifier = Modifier.size(60.dp))
         }

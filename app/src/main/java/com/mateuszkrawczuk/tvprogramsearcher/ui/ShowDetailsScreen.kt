@@ -12,13 +12,13 @@ import dev.chrisbanes.accompanist.coil.CoilImage
 import org.koin.androidx.compose.getViewModel
 
 @Composable
-fun ShowDetailsScreen(personName: String, popBack: () -> Unit) {
+fun ShowDetailsScreen(showName: String, popBack: () -> Unit) {
     val tvMazeViewModel = getViewModel<TvProgramSearcherViewModel>()
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(personName) },
+                title = { Text(showName) },
                 navigationIcon = {
                     IconButton(onClick = { popBack() }) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
@@ -29,19 +29,16 @@ fun ShowDetailsScreen(personName: String, popBack: () -> Unit) {
         Column(modifier = Modifier.padding(16.dp).fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val person = tvMazeViewModel.getShow(personName)
-            person?.let {
-                Text(person.name, style = MaterialTheme.typography.h4)
+            val show = tvMazeViewModel.getShow(showName)
+            show?.let {
+                Text(show.name, style = MaterialTheme.typography.h4)
                 Spacer(modifier = Modifier.size(12.dp))
 
                 val imageUrl = it.image?.medium ?: ""
                 if (imageUrl.isNotEmpty()) {
-                    CoilImage(data = imageUrl, modifier = Modifier.size(240.dp), contentDescription = person.name)
+                    CoilImage(data = imageUrl, modifier = Modifier.size(240.dp), contentDescription = show.name)
                 }
                 Spacer(modifier = Modifier.size(24.dp))
-
-                val bio = tvMazeViewModel.getPersonBio(person.name)
-                Text(bio, style = MaterialTheme.typography.body1)
             }
         }
     }
