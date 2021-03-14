@@ -1,17 +1,13 @@
 package com.mateuszkrawczuk.tvprogramsearcher.common.repository
 
 import co.touchlab.kermit.Kermit
+import com.mateuszkrawczuk.TvProgramSearcher.common.remote.Show
 import com.mateuszkrawczuk.tvprogramsearcher.common.model.personBios
 import com.mateuszkrawczuk.tvprogramsearcher.common.model.personImages
-import com.mateuszkrawczuk.tvprogramsearcher.common.remote.Assignment
-import com.mateuszkrawczuk.tvprogramsearcher.common.remote.IssPosition
 import com.mateuszkrawczuk.tvprogramsearcher.common.remote.TvMazeApi
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -34,28 +30,55 @@ class TvProgramSearcherRepository : KoinComponent  {
         }
     }
 
-    fun fetchPeopleAsFlow(): Flow<List<Assignment>> {
+    fun fetchPeopleAsFlow(): Flow<List<Show>> {
         // the main reason we need to do this check is that sqldelight isn't currently
         // setup for javascript client
-        return tvProgramSearcherQueries?.selectAll(mapper = { name, craft ->
-            Assignment(name = name, craft = craft)
-        })?.asFlow()?.mapToList() ?: flowOf(emptyList<Assignment>())
+        return tvProgramSearcherQueries?.selectAll(mapper = {
+                                                             id,
+                                                             image,
+                                                             language,
+                                                             name,
+                                                             officialSite,
+                                                             premiered,
+                                                             genres,
+                                                             summary
+                                                              ->
+            Show(
+                genres = listOf(genres),
+                id = id,
+                image = image,
+                language = language,
+                name = name,
+                officialSite = officialSite,
+                premiered = premiered,
+                summary = summary,
+            )
+        })?.asFlow()?.mapToList() ?: flowOf(emptyList<Show>())
     }
 
     private suspend fun fetchAndStorePeople()  {
         logger.d { "fetchAndStorePeople" }
-        val result = tvMazeApi.fetchPeople()
+        val result = tvMazeApi.fetchShows("girls")
 
         // this is very basic implementation for now that removes all existing rows
         // in db and then inserts results from api request
         tvProgramSearcherQueries?.deleteAll()
-        result.people.forEach {
-            tvProgramSearcherQueries?.insertItem(it.name, it.craft)
+        result.forEach {
+            tvProgramSearcherQueries?.insertItem(
+                it.show.id,
+                it.show.image,
+                it.show.language,
+                it.show.name,
+                it.show.officialSite,
+                it.show.premiered,
+                it.show.genres.joinToString(),
+                it.show.summary
+                )
         }
     }
 
     // Used by web client atm
-    suspend fun fetchPeople() = tvMazeApi.fetchPeople().people
+    suspend fun fetchPeople() = tvMazeApi.fetchShows("girls")
 
     fun getPersonBio(personName: String): String {
         return personBios[personName] ?: ""
@@ -66,7 +89,7 @@ class TvProgramSearcherRepository : KoinComponent  {
     }
 
     // called from Kotlin/Native clients
-    fun startObservingPeopleUpdates(success: (List<Assignment>) -> Unit) {
+    fun startObservingPeopleUpdates(success: (List<Show>) -> Unit) {
         logger.d { "startObservingTvUpdates" }
         peopleJob = coroutineScope.launch {
             fetchPeopleAsFlow().collect {
@@ -81,14 +104,14 @@ class TvProgramSearcherRepository : KoinComponent  {
     }
 
 
-    fun pollISSPosition(): Flow<IssPosition> = flow {
-        while (true) {
-            val position = tvMazeApi.fetchISSPosition().iss_position
-            emit(position)
-            logger.d("PeopleInSpaceRepository") { position.toString() }
-            delay(POLL_INTERVAL)
-        }
-    }
+//    fun pollISSPosition(): Flow<IssPosition> = flow {
+//        while (true) {
+//            val position = tvMazeApi.fetchISSPosition().iss_position
+//            emit(position)
+//            logger.d("PeopleInSpaceRepository") { position.toString() }
+//            delay(POLL_INTERVAL)
+//        }
+//    }
 
 
 
@@ -96,8 +119,6 @@ class TvProgramSearcherRepository : KoinComponent  {
         override val coroutineContext: CoroutineContext
             get() = SupervisorJob() + Dispatchers.Main
     }
-
-    fun iosPollISSPosition() = KotlinNativeFlowWrapper<IssPosition>(pollISSPosition())
 
 
     companion object {

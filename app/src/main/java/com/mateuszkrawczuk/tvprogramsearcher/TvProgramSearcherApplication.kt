@@ -1,9 +1,10 @@
-package com.mateuszkrawczuk.tvprogramsearcher.di
+package com.mateuszkrawczuk.tvprogramsearcher
 
 import android.app.Application
 import co.touchlab.kermit.Kermit
 import com.mateuszkrawczuk.tvprogramsearcher.common.di.initKoin
 import com.mateuszkrawczuk.tvprogramsearcher.common.repository.appContext
+import com.mateuszkrawczuk.tvprogramsearcher.di.appModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.component.KoinComponent

@@ -1,14 +1,28 @@
 
-CREATE TABLE People(
-name TEXT NOT NULL PRIMARY KEY,
-craft TEXT NOT NULL
+CREATE TABLE Show(
+id INTEGER NOT NULL PRIMARY KEY,
+image BLOB,
+language TEXT NOT NULL,
+name TEXT NOT NULL,
+officialSite TEXT NOT NULL,
+premiered TEXT NOT NULL,
+genres TEXT NOT NULL,
+summary TEXT NOT NULL
 );
 
 insertItem:
-INSERT OR REPLACE INTO People(name, craft)VALUES(?,?);
+INSERT OR REPLACE INTO Show(id,
+                            image,
+                            language,
+                            name,
+                            officialSite,
+                            premiered,
+                            genres,
+                            summary)VALUES(?,?,?,?,?,?,?,?);
+
 
 selectAll:
-SELECT * FROM People;
+SELECT * FROM Show;
 
 deleteAll:
-DELETE FROM People;
+DELETE FROM Show;
