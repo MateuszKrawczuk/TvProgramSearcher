@@ -27,7 +27,7 @@ class TvProgramSearcherRepository : KoinComponent  {
 
     init {
         coroutineScope.launch {
-            fetchAndStorePeople()
+            fetchAndStoreShows("")
         }
     }
 
@@ -49,9 +49,9 @@ class TvProgramSearcherRepository : KoinComponent  {
         })?.asFlow()?.mapToList() ?: flowOf(emptyList<Show>())
     }
 
-    private suspend fun fetchAndStorePeople()  {
-        logger.d { "fetchAndStorePeople" }
-        val result = tvMazeApi.fetchShows("girls")
+    suspend fun fetchAndStoreShows(string: String)  {
+        logger.d { "fetchAndStoreShows" }
+        val result = tvMazeApi.fetchShows(string)
 
         // this is very basic implementation for now that removes all existing rows
         // in db and then inserts results from api request
@@ -67,13 +67,13 @@ class TvProgramSearcherRepository : KoinComponent  {
     }
 
     // Used by web client atm
-    suspend fun fetchPeople() = tvMazeApi.fetchShows("girls")
+    suspend fun fetchPeople(string: String) = tvMazeApi.fetchShows(string)
 
     fun getPersonBio(personName: String): String {
         return personBios[personName] ?: ""
     }
 
-    fun getPersonImage(personName: String): String {
+    fun getshowImage(personName: String): String {
         return personImages[personName] ?: ""
     }
 
@@ -92,23 +92,10 @@ class TvProgramSearcherRepository : KoinComponent  {
         peopleJob?.cancel()
     }
 
-
-//    fun pollISSPosition(): Flow<IssPosition> = flow {
-//        while (true) {
-//            val position = tvMazeApi.fetchISSPosition().iss_position
-//            emit(position)
-//            logger.d("PeopleInSpaceRepository") { position.toString() }
-//            delay(POLL_INTERVAL)
-//        }
-//    }
-
-
-
     val iosScope: CoroutineScope = object : CoroutineScope {
         override val coroutineContext: CoroutineContext
             get() = SupervisorJob() + Dispatchers.Main
     }
-
 
     companion object {
         private const val POLL_INTERVAL = 10000L
