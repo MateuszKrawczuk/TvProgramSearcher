@@ -1,6 +1,6 @@
 package com.mateuszkrawczuk.tvprogramsearcher.common.remote
 
-import com.mateuszkrawczuk.TvProgramSearcher.common.remote.ShowSearchResultItem
+import com.mateuszkrawczuk.TvProgramSearcher.common.model.ShowSearchResultItem
 import io.ktor.client.*
 import io.ktor.client.request.*
 import org.koin.core.component.KoinComponent
