@@ -1,9 +1,10 @@
 package com.mateuszkrawczuk.tvprogramsearcher.common.di
 
-import co.touchlab.kermit.Kermit
+//import co.touchlab.kermit.Kermit
 import com.mateuszkrawczuk.tvprogramsearcher.common.remote.TvMazeApi
 import com.mateuszkrawczuk.tvprogramsearcher.common.repository.TvProgramSearcherRepository
-import com.mateuszkrawczuk.tvprogramsearcher.common.repository.getLogger
+import com.mateuszkrawczuk.tvprogramsearcher.common.repository.TvProgramSearcherRepositoryInterface
+//import com.mateuszkrawczuk.tvprogramsearcher.common.repository.getLogger
 import io.ktor.client.*
 import io.ktor.client.features.json.*
 import io.ktor.client.features.json.serializer.*
@@ -25,9 +26,9 @@ fun initKoin() = initKoin(enableNetworkLogs = false) {}
 fun commonModule(enableNetworkLogs: Boolean) = module {
     single { createJson() }
     single { createHttpClient(get(), enableNetworkLogs = enableNetworkLogs) }
-    single { TvProgramSearcherRepository() }
+    single<TvProgramSearcherRepositoryInterface> { TvProgramSearcherRepository() }
     single { TvMazeApi(get()) }
-    single { Kermit(getLogger()) }
+//    single { Kermit(getLogger()) }
 }
 
 fun createJson() = Json { isLenient = true; ignoreUnknownKeys = true }

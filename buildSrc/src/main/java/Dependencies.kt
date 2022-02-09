@@ -1,18 +1,17 @@
 
 object Versions {
-    const val kotlin = "1.4.31"
-    const val kotlinCoroutines = "1.4.3-native-mt"
-    const val ktor = "1.5.2"
-    const val kotlinxSerialization = "1.0.1"
-    const val koin = "3.0.1-beta-1"
-    const val sqlDelight = "1.4.3"
-    const val kermit = "0.1.8"
+    const val kotlin = "1.5.31"
+    const val kotlinCoroutines = "1.5.2"
+    const val ktor = "1.6.4"
+    const val kotlinxSerialization = "1.2.2"
+    const val koin = "3.1.5"
+    const val sqlDelight = "1.5.3"
+    const val kermit = "1.0.0"
 
-    const val sqliteJdbcDriver = "3.30.1"
     const val slf4j = "1.7.30"
-    const val compose = "1.0.0-beta02"
-    const val nav_compose = "1.0.0-alpha09"
-    const val accompanist = "0.6.2"
+    const val compose = "1.0.5"
+    const val nav_compose = "2.4.0"
+    const val accompanist = "0.19.0"
 
     const val junit = "4.13"
     const val testRunner = "1.3.0"
@@ -21,7 +20,7 @@ object Versions {
 
 object AndroidSdk {
     const val min = 21
-    const val compile = 29
+    const val compile = 31
     const val target = compile
 }
 
@@ -35,13 +34,15 @@ object Test {
 
 object Compose {
     const val ui = "androidx.compose.ui:ui:${Versions.compose}"
+    const val runtime = "androidx.compose.runtime:runtime:${Versions.compose}"
     const val uiGraphics = "androidx.compose.ui:ui-graphics:${Versions.compose}"
     const val uiTooling = "androidx.compose.ui:ui-tooling:${Versions.compose}"
     const val foundationLayout = "androidx.compose.foundation:foundation-layout:${Versions.compose}"
     const val material = "androidx.compose.material:material:${Versions.compose}"
     const val runtimeLiveData = "androidx.compose.runtime:runtime-livedata:${Versions.compose}"
     const val navigation = "androidx.navigation:navigation-compose:${Versions.nav_compose}"
-    const val accompanist= "dev.chrisbanes.accompanist:accompanist-coil:${Versions.accompanist}"
+    const val coilCompose = "io.coil-kt:coil-compose:1.3.1"
+    const val accompanistPlaceholder = "com.google.accompanist:accompanist-placeholder:${Versions.accompanist}"
 }
 
 object Koin {
@@ -76,7 +77,6 @@ object SqlDelight {
 
     val nativeDriver = "com.squareup.sqldelight:native-driver:${Versions.sqlDelight}"
     val nativeDriverMacos = "com.squareup.sqldelight:native-driver-macosx64:${Versions.sqlDelight}"
-    val jdbcDriver = "org.xerial:sqlite-jdbc:${Versions.sqliteJdbcDriver}"
     val sqlliteDriver = "com.squareup.sqldelight:sqlite-driver:${Versions.sqlDelight}"
 }
 

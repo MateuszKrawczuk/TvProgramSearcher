@@ -10,6 +10,4 @@ pluginManagement {
 
 rootProject.name = "TvProgramSearcher"
 
-enableFeaturePreview("GRADLE_METADATA")
-
 include(":app", ":common")

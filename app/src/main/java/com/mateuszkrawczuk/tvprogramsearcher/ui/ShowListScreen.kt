@@ -2,6 +2,7 @@ package com.mateuszkrawczuk.tvprogramsearcher.ui
 
 import android.util.Log
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -23,13 +24,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mateuszkrawczuk.TvProgramSearcher.common.model.Show
-import dev.chrisbanes.accompanist.coil.CoilImage
+import coil.compose.rememberImagePainter
 import org.koin.androidx.compose.getViewModel
 
 @ExperimentalComposeUiApi
 @Composable
 fun ShowListScreen(showSelected : (show : Show) -> Unit) {
-    val tvMazeViewModel = getViewModel<TvProgramSearcherViewModel>()
+    val tvMazeViewModel : TvProgramSearcherViewModel = getViewModel()
     val showState = tvMazeViewModel.showsInMaze.collectAsState()
     val query = tvMazeViewModel.query.value
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -95,7 +96,7 @@ fun showView(showImageUrl: String, show: Show, showSelected : (show : Show) -> U
     ) {
 
         if (showImageUrl.isNotEmpty()) {
-            CoilImage(data = showImageUrl, modifier = Modifier.size(60.dp), contentDescription = show.name)
+            Image(painter = rememberImagePainter(showImageUrl), modifier = Modifier.size(60.dp), contentDescription = show.name)
         } else {
             Spacer(modifier = Modifier.size(60.dp))
         }

@@ -1,5 +1,6 @@
 package com.mateuszkrawczuk.tvprogramsearcher.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -8,12 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import dev.chrisbanes.accompanist.coil.CoilImage
+import coil.compose.rememberImagePainter
 import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun ShowDetailsScreen(showName: String, popBack: () -> Unit) {
-    val tvMazeViewModel = getViewModel<TvProgramSearcherViewModel>()
+    val tvMazeViewModel: TvProgramSearcherViewModel = getViewModel()
 
     Scaffold(
         topBar = {
@@ -36,7 +37,7 @@ fun ShowDetailsScreen(showName: String, popBack: () -> Unit) {
 
                 val imageUrl = it.image?.medium ?: ""
                 if (imageUrl.isNotEmpty()) {
-                    CoilImage(data = imageUrl, modifier = Modifier.size(240.dp), contentDescription = show.name)
+                    Image(painter = rememberImagePainter(imageUrl), modifier = Modifier.size(240.dp), contentDescription = show.name)
                 }
                 Spacer(modifier = Modifier.size(24.dp))
             }

@@ -3,17 +3,15 @@ package com.mateuszkrawczuk.tvprogramsearcher.ui
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.touchlab.kermit.Kermit
 import com.mateuszkrawczuk.TvProgramSearcher.common.model.Show
-import com.mateuszkrawczuk.tvprogramsearcher.common.repository.TvProgramSearcherRepository
+import com.mateuszkrawczuk.tvprogramsearcher.common.repository.TvProgramSearcherRepositoryInterface
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 
 class TvProgramSearcherViewModel(
-    private val tvProgramSearcherRepository: TvProgramSearcherRepository,
-    private val logger: Kermit
+    private val tvProgramSearcherRepository: TvProgramSearcherRepositoryInterface
 ) : ViewModel() {
     val query = mutableStateOf("")
     private val coroutineScope: CoroutineScope = MainScope()

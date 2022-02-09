@@ -7,17 +7,18 @@ import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigate
+//import androidx.navigation.compose.navigate
 import androidx.navigation.compose.rememberNavController
 import com.mateuszkrawczuk.tvprogramsearcher.BuildConfig
 import org.koin.androidx.compose.getViewModel
 import org.osmdroid.config.Configuration
 
+@ExperimentalComposeUiApi
 class MainActivity : ComponentActivity() {
 
-    @ExperimentalComposeUiApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -46,7 +47,7 @@ data class BottomNavigationitem(
 fun MainLayout() {
     val navController = rememberNavController()
 
-    val tvProgramSearcherViewModel = getViewModel<TvProgramSearcherViewModel>()
+//    val tvProgramSearcherViewModel :  TvProgramSearcherViewModel = getViewModel()
 
     Scaffold {
         NavHost(navController, startDestination = Screen.ShowList.title) {

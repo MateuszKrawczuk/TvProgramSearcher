@@ -1,8 +1,6 @@
 package com.mateuszkrawczuk.tvprogramsearcher.common.repository
 
-import co.touchlab.kermit.Logger
+import com.mateuszkrawczuk.TvProgramSearcher.common.di.IDatabaseDependencyProvider
 import com.mateuszkrawczuk.tvprogramsearcher.db.TvProgramSearcherDatabase
 
-expect fun createDb() : TvProgramSearcherDatabase?
-
-expect fun getLogger(): Logger
+expect fun createDb(dependencyProvider: IDatabaseDependencyProvider) : TvProgramSearcherDatabase?
